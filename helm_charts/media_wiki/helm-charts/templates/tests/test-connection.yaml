@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "media_wiki.fullname" . }}-test-connection"
+  labels:
+    app.kubernetes.io/name: {{ include "media_wiki.name" . }}
+    helm.sh/chart: {{ include "media_wiki.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "media_wiki.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
